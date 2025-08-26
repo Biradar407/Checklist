@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Road Safety Fortnight</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(145deg, #fff8f0, #ffeedd); /* soft gradient for glossy feel */
+    color: #0b1220;
+    text-align: center;
+}
+
+/* Glossy header effect */
+header {
+    padding: 20px 10px;
+}
+
+/* Header box for Indian Oil */
+.header-box {
+    background: linear-gradient(145deg, #fff7e6, #ffd59a); /* glossy gradient */
+    border: 2px solid #d35400; /* dark orange border */
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* soft shadow for 3D effect */
+}
+
+/* Indian Oil text */
+.header-box p {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d35400; /* dark orange text */
+    line-height: 1.2;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* subtle glossy shadow */
+}
+
+/* Road Safety title below Indian Oil */
+header h1 {
+    margin: 15px 0 0 0;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #2f6be3;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* subtle glossy shadow */
+}
+
+/* Blinking NEW DRIVE */
+@keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0; }
+}
+
+.new-mark {
+    color: red;
+    font-weight: bold;
+    margin-left: 10px;
+    animation: blink 1s infinite;
+    font-size: 1rem;
+}
+
+.new-mark::before {
+    content: "★ ";
+}
+
+/* Main content glossy buttons */
+.main-content {
+    padding: 30px 15px;
+}
+
+a.button {
+    display: inline-block;
+    margin: 20px 10px;
+    padding: 12px 20px;
+    background: linear-gradient(to right, #2f6be3, #4d85f5); /* glossy gradient button */
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 10px;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* shadow for depth */
+}
+
+a.button:hover {
+    background: linear-gradient(to right, #1e4fb8, #3a6be0);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+.footer {
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #6b7280;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .header-box p {
+        font-size: 1.2rem;
+    }
+    header h1 {
+        font-size: 1.3rem;
+    }
+    a.button {
+        padding: 10px 16px;
+        font-size: 0.95rem;
+    }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-box">
+    <p>Indian Oil Corporation Limited,<br>Indane Bottling Plant, Belgaum BP</p>
+  </div>
+  <h1>
+    Road Safety Fortnight Checklist 
+    <span class="new-mark">NEW DRIVE</span>
+  </h1>
+</header>
+
+<div class="main-content">
+  <h2>Welcome to Road Safety Fortnight Inspection Portal</h2>
+  <a href="checklist.html" class="button">Go to Checklist</a>
+</div>
+
+<div class="footer">
+  &copy; 2025 Vendor - Asharani Mahantesh Biradar
+</div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Road Safety Fortnight Checklist</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+:root{--bg:#f4f6fb;--card:#ffffff;--accent:#2f6be3;--muted:#6b7280}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:#0b1220}
+.wrap{max-width:980px;margin:18px auto;padding:14px}
+header{display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+h1{font-size:1.15rem;margin:0}
+.card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 20px rgba(23,32,63,.08)}
+label{font-size:0.85rem;color:var(--muted);display:block;margin-bottom:6px}
+input[type="text"],input[type="date"],select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #e6e9f0;background:#fbfdff}
+textarea{min-height:56px}
+.btn{background:var(--accent);color:white;border:0;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;margin-top:12px;display:inline-block}
+.btn.secondary{background:#374151}
+.btn.warn{background:#dc2626}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumb{width:86px;height:66px;border-radius:8px;overflow:hidden;border:1px solid #e6e9f0;position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;right:6px;top:6px;background:rgba(0,0,0,0.45);border:0;color:#fff;border-radius:8px;padding:2px 6px;cursor:pointer}
+.progress-bar{height:8px;background:#d1d5db;border-radius:4px;margin-bottom:12px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);width:0%}
+.end-banner{text-align:center;margin-top:20px}
+.end-banner button{width:220px;font-size:1.05rem;margin:12px;padding:16px 20px}
+.tiny{font-size:0.8rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{border:1px solid #d1d5db;padding:6px;font-size:0.8rem;text-align:left}
+th{background:#2f6be3;color:#fff;text-align:center}
+.thumb-small{width:40px;height:30px;object-fit:cover;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Road Safety Fortnight Checklist</h1>
+    <div class="tiny">Indane Bottling Plant, Belgaum</div>
+  </header>
+
+  <div class="card" id="wizardCard">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="stepContainer"></div>
+  </div>
+</div>
+
+<script>
+const CHECKS = [
+  "Whether one time Tool box talk carried out",
+  "Whether JRM copy handed over to Crew (in local language)",
+  "Whether all junction boxes are properly sealed.",
+  "Whether no loose/dangling electrical wiring/terminal available.",
+  "Whether fuse box is in good condition (without shorted wires, etc.)",
+  "Whether battery is mounted inside the cabin in an easily accessible position within a metallic cover openings in line with OISD-STD-159.",
+  "Whether battery terminal are provided with fixed rubber caps.",
+  "Whether readily accessible double pole master switch of minimum 300 amp rating for switching off the engine is provided inside the cabin.",
+  "Whether electrical wiring is insulated and provided with suitable over-current protection.",
+  "Whether dipole wiring available.",
+  "Truck observed without double pole wiring",
+  "Truck modified for shifting of batteries inside cabin",
+  "Whether all the cable entries through cabin walls/enclosures etc., are with proper glands or rubber bushes or packings etc., without sharp edges in the entry holes.",
+  "Whether any visual marks of wear & tear or heat/ cut marks of wiring etc., to any of the electrical cables of battery/master cut off switch & various other cables in the engine compartment under the cabin (check by tilting the cabin/opening the engine cover).",
+  "Whether any AC to DC inverter provided for charging of mobile phones inside the cabin.",
+  "Whether Truck is self-starting.",
+  "Whether ABS provided in truck and is in working.",
+  "Whether VTS provided in truck and is in working condition.",
+  "Whether air brakes are not bypassed.",
+  "Whether speed Governor with max. pre-set speed as per CMV rules / State Govt. notification.",
+  "Whether all tyres (including spare tyre) are in good condition.",
+  "Whether cylinder cage condition is in tight fit condition for maximum capacity.",
+  "If any failure observed in any of the points, whether letter issued to the transporter for rectification and truck to be allowed only after necessary repair work.",
+  "Remarks (If any)"
+];
+
+let stepIndex = 0;
+let formData = {};
+let imagesCache = {};
+
+function showStep(){
+  const container = document.getElementById('stepContainer');
+  container.innerHTML = '';
+  const progress = Math.round((stepIndex/(CHECKS.length+3))*100);
+  document.getElementById('progressFill').style.width = progress+'%';
+
+  if(stepIndex===0){
+    // Truck No + Inspection Date
+    const today = new Date().toISOString().slice(0,10);
+    container.innerHTML = `
+      <label>Truck No</label><input id="truckNo" type="text" placeholder="Enter truck number"><br>
+      <label>Inspection Date</label><input id="inspectionDate" type="date" value="${today}"><br>
+      <button class="btn" onclick="nextStep()">Next</button>
+    `;
+    document.getElementById('truckNo').focus();
+  } else if(stepIndex===1){
+    container.innerHTML = `<label>Driver Name</label><input id="driverName" type="text" placeholder="Driver name"><br>
+    <button class="btn" onclick="prevStep()">Previous</button><button class="btn" onclick="nextStep()">Next</button>`;
+    document.getElementById('driverName').focus();
+  } else if(stepIndex===2){
+    container.innerHTML = `<label>ID No</label><input id="idNo" type="text" placeholder="ID number"><br>
+    <button class="btn" onclick="prevStep()">Previous</button><button class="btn" onclick="nextStep()">Next</button>`;
+    document.getElementById('idNo').focus();
+  } else if(stepIndex>=3 && stepIndex<3+CHECKS.length){
+    const idx = stepIndex-3;
+    imagesCache[idx] = imagesCache[idx]||{proof:[]};
+    container.innerHTML = `
+      <div><strong>${idx+1}. ${CHECKS[idx]}</strong></div>
+      <select id="status_${idx}">
+        <option value="">--Select--</option>
+        <option>Found OK</option>
+        <option>Not OK</option>
+        <option>Yes</option>
+        <option>No</option>
+        <option>Available</option>
+      </select>
+      <textarea id="remarks_${idx}" placeholder="Remarks (optional)"></textarea>
+      <label class="btn" for="proof_${idx}">📷 Capture Image</label>
+      <input id="proof_${idx}" type="file" accept="image/*" capture="environment" style="display:none">
+      <div class="thumbs" id="thumbs_${idx}"></div>
+      <br>
+      <button class="btn" onclick="prevStep()">Previous</button>
+      <button class="btn" onclick="nextStep()">Next</button>
+    `;
+    renderThumbs(idx);
+    setTimeout(()=>document.getElementById(`status_${idx}`).focus(),100);
+    document.getElementById(`proof_${idx}`).addEventListener('change', e=>{
+      const files = Array.from(e.target.files||[]);
+      files.forEach(f=>{
+        const reader = new FileReader();
+        reader.onload = function(ev){
+          imagesCache[idx].proof.push(ev.target.result);
+          renderThumbs(idx);
+        };
+        reader.readAsDataURL(f);
+      });
+    });
+  } else {
+    // Preview table before end banner
+    container.innerHTML = `<h2>Preview of Completed Checks</h2>`;
+    container.innerHTML += `<table><thead><tr><th>Sl.No</th><th>Check</th><th>Status</th><th>Remarks</th><th>Photos</th></tr></thead><tbody id="previewBody"></tbody></table>`;
+    const tbody = document.getElementById('previewBody');
+    CHECKS.forEach((q,i)=>{
+      const row = document.createElement('tr');
+      const photos = imagesCache[i]?.proof?.map(p=>`<img src="${p}" class="thumb-small">`).join(' ')||'-';
+      row.innerHTML=`<td>${i+1}</td><td>${q}</td><td>${formData[`status_${i}`]||'-'}</td><td>${formData[`remarks_${i}`]||'-'}</td><td>${photos}</td>`;
+      tbody.appendChild(row);
+    });
+
+    container.innerHTML += `
+      <div class="end-banner">
+        <h2>All Checks Completed ✅</h2>
+        <button class="btn secondary" onclick="sharePdf()">📤 Generate & Share PDF</button>
+        <button class="btn" onclick="downloadPdf()">⬇️ Download PDF</button>
+        <button class="btn warn" onclick="clearAllImages()">🧹 Clear All Images</button>
+      </div>
+    `;
+    document.getElementById('progressFill').style.width='100%';
+  }
+}
+
+function renderThumbs(idx){
+  const container = document.getElementById(`thumbs_${idx}`);
+  if(!container) return;
+  container.innerHTML='';
+  (imagesCache[idx].proof||[]).forEach((data,i)=>{
+    const div = document.createElement('div'); div.className='thumb';
+    div.innerHTML=`<img src="${data}"><button onclick="removeImage(${idx},${i})">✕</button>`;
+    container.appendChild(div);
+  });
+}
+
+function removeImage(idx,i){ imagesCache[idx].proof.splice(i,1); renderThumbs(idx); }
+
+function nextStep(){ saveStepData(); stepIndex++; showStep(); }
+function prevStep(){ stepIndex--; showStep(); }
+
+function saveStepData(){
+  if(stepIndex===0){ formData.truckNo=document.getElementById('truckNo').value||''; formData.inspectionDate=document.getElementById('inspectionDate').value||'';}
+  if(stepIndex===1) formData.driverName=document.getElementById('driverName').value||'';
+  if(stepIndex===2) formData.idNo=document.getElementById('idNo').value||'';
+  if(stepIndex>=3 && stepIndex<3+CHECKS.length){
+    const idx=stepIndex-3;
+    formData[`status_${idx}`]=document.getElementById(`status_${idx}`).value||'';
+    formData[`remarks_${idx}`]=document.getElementById(`remarks_${idx}`).value||'';
+  }
+}
+
+function collectReport(){
+  const rpt = { meta:{truckNo:formData.truckNo||'', driverName:formData.driverName||'', idNo:formData.idNo||'', inspectionDate: formData.inspectionDate||'', createdAt:new Date().toISOString()}, checks:[] };
+  CHECKS.forEach((q,i)=>{
+    rpt.checks.push({
+      no:i+1,
+      question:q,
+      status: formData[`status_${i}`]||'',
+      remarks: formData[`remarks_${i}`]||'',
+      photos: imagesCache[i] ? imagesCache[i].proof.slice() : []
+    });
+  });
+  return rpt;
+}
+
+async function generatePdfFile(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'mm',format:'a4'});
+  const rpt = collectReport();
+  doc.setFontSize(14);
+  doc.text('Road Safety Fortnight Checklist',14,16);
+  doc.setFontSize(10);
+  doc.text(`Plant: Indane Bottling Plant, Belgaum`,14,24);
+  doc.text(`Truck No: ${rpt.meta.truckNo}`,14,30);
+  doc.text(`Driver: ${rpt.meta.driverName}`,100,30);
+  doc.text(`ID No: ${rpt.meta.idNo}`,14,36);
+  doc.text(`Inspection Date: ${rpt.meta.inspectionDate}`,100,36);
+  doc.text(`Generated On: ${new Date().toLocaleString()}`,14,42);
+
+  const body = rpt.checks.map(c=>[c.no,c.question,c.status||'-',c.remarks||'-']);
+  doc.autoTable({ startY:50, head:[['Sl.No','Check Point','Status','Remarks']], body:body,
+    styles:{fontSize:8,cellPadding:2}, headStyles:{fillColor:[47,107,227], textColor:255, halign:'center'},
+    columnStyles:{0:{cellWidth:12,halign:'center'},1:{cellWidth:95},2:{cellWidth:30,halign:'center'},3:{cellWidth:48}},
+    margin:{left:14,right:14}
+  });
+
+  const blob = doc.output('blob');
+  return new File([blob],`RoadSafetyReport_${(rpt.meta.truckNo||'noTruck')}_${(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'-')}.pdf`,{type:'application/pdf'});
+}
+
+async function sharePdf(){ try{ const pdfFile=await generatePdfFile();
+  if(navigator.canShare && navigator.canShare({files:[pdfFile]})){ await navigator.share({title:`RoadSafetyReport`,text:`Road Safety Fortnight Report`,files:[pdfFile]}); }
+  else{ downloadBlob(pdfFile,pdfFile.name); }
+}catch(e){alert('PDF share failed');console.error(e);} }
+
+async function downloadPdf(){ const pdfFile=await generatePdfFile(); downloadBlob(pdfFile,pdfFile.name); }
+function downloadBlob(file,name){ const url=URL.createObjectURL(file); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500); }
+function clearAllImages(){ if(confirm('Clear all captured images?')){ imagesCache={}; showStep(); }}
+
+showStep();
+</script>
+</body>
+</html>
