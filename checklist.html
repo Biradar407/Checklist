@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Road Safety Fortnight Checklist</title>
 
 <!-- jsPDF + AutoTable -->
@@ -11,46 +11,20 @@
 
 <style>
 :root{
-  --bg:#e6f7e6;
-  --card:#ffffff;
-  --accent:#2f6be3;
-  --secondary:#374151;
-  --warn:#dc2626;
-  --share:#10b981;
-  --text:#0b1220;
-  --muted:#6b7280;
+  --bg:#e6f7e6; --card:#ffffff; --accent:#2f6be3; --secondary:#374151; --warn:#dc2626; --share:#10b981; --text:#0b1220; --muted:#6b7280;
 }
-body{
-  margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text);
-}
-.wrap{
-  max-width:800px;margin:18px auto;padding:16px;
-}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text);}
+.wrap{max-width:800px;margin:18px auto;padding:16px;}
 header{text-align:center;margin-bottom:12px;}
 h1{font-size:1.8rem;margin:0;}
 .tiny{font-size:0.9rem;color:var(--muted);}
-.card{
-  background:var(--card);border-radius:12px;padding:14px;box-shadow:0 4px 12px rgba(23,32,63,.08);
-}
-label{
-  font-size:1.2rem;color:#222;display:block;margin-bottom:4px;font-weight:600;
-}
-.input-large{
-  width:100%;padding:16px 18px;border-radius:12px;border:1px solid #dfe3ea;background:#fbfdff;font-size:1.25rem;
-  text-transform:uppercase;box-sizing:border-box;margin-bottom:10px;
-}
-textarea{
-  width:100%;font-size:1.1rem;padding:10px;min-height:80px;border-radius:10px;border:1px solid #dfe3ea;
-  resize:none;box-sizing:border-box;overflow:auto;
-}
+.card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 4px 12px rgba(23,32,63,.08);}
+label{font-size:1.2rem;color:#222;display:block;margin-bottom:4px;font-weight:600;}
+.input-large{width:100%;padding:16px 18px;border-radius:12px;border:1px solid #dfe3ea;background:#fbfdff;font-size:1.25rem;text-transform:uppercase;box-sizing:border-box;margin-bottom:10px;}
+textarea{width:100%;font-size:1.1rem;padding:10px;min-height:80px;border-radius:10px;border:1px solid #dfe3ea;resize:none;box-sizing:border-box;overflow:auto;}
 textarea.autoExpand{overflow:hidden;}
-select{
-  width:100%;padding:14px 16px;border-radius:10px;border:1px solid #dfe3ea;font-size:1.1rem;margin-bottom:10px;
-}
-.btn{
-  background:var(--accent);color:white;border:0;padding:10px 18px;border-radius:12px;cursor:pointer;font-weight:700;margin-top:12px;font-size:1.15rem;
-  transition:0.3s;
-}
+select{width:100%;padding:14px 16px;border-radius:10px;border:1px solid #dfe3ea;font-size:1.1rem;margin-bottom:10px;}
+.btn{background:var(--accent);color:white;border:0;padding:10px 18px;border-radius:12px;cursor:pointer;font-weight:700;margin-top:12px;font-size:1.15rem;transition:0.3s;}
 .btn:hover{opacity:0.85;}
 .btn.secondary{background:var(--secondary);}
 .btn.warn{background:var(--warn);}
@@ -67,7 +41,7 @@ select{
 .preview-card th,.preview-card td{border:1px solid #e6e9f0;padding:8px;vertical-align:top}
 .preview-images{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .preview-images img{width:70px;height:55px;object-fit:cover;border-radius:6px;border:1px solid #dcdcdc}
-#driverPhotoPreview{width:80px;height:100px;object-fit:cover;border:1px solid #ccc;border-radius:6px;margin-top:6px;}
+#driverPhotoPreview{width:30px;height:30px;object-fit:cover;border:1px solid #ccc;border-radius:6px;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -118,9 +92,9 @@ function autoExpandTextarea(el){el.style.height='auto'; el.style.height=(el.scro
 function showStep(){
   const container=document.getElementById('stepContainer');
   container.innerHTML='';
-  const progress=Math.round((stepIndex/(CHECKS.length+5))*100);
+  const progress=Math.round((stepIndex/(CHECKS.length+6))*100);
   document.getElementById('progressFill').style.width=progress+'%';
-  const today = new Date().toISOString().split('T')[0];
+  const today=new Date().toISOString().split('T')[0];
 
   if(stepIndex===0){
     container.innerHTML=`<label>Truck No</label><input id="truckNo" class="input-large" placeholder="TRUCK NO"><div class="nav-btns"><button class="btn" onclick="nextStep()">Next ➜</button></div>`;
@@ -133,7 +107,6 @@ function showStep(){
       <input type="file" id="driverPhotoInput" accept="image/*" capture="environment">
       <img id="driverPhotoPreview" src="">
       <div class="nav-btns"><button class="btn secondary" onclick="prevStep()">◀ Previous</button><button class="btn" onclick="nextStep()">Next ➜</button></div>`;
-    document.getElementById('driverPhotoInput').focus();
     document.getElementById('driverPhotoInput').addEventListener('change', e=>{
       const file=e.target.files[0];
       if(file){
@@ -148,7 +121,6 @@ function showStep(){
     idInput.addEventListener('input',()=>{idInput.value=idInput.value.replace(/\D/g,'');});
   } else if(stepIndex===4){
     container.innerHTML=`<label>Date of Check</label><input id="checkDate" type="date" value="${today}"><div class="nav-btns"><button class="btn secondary" onclick="prevStep()">◀ Previous</button><button class="btn" onclick="nextStep()">Next ➜</button></div>`;
-    document.getElementById('checkDate').focus();
   } else if(stepIndex===5){
     container.innerHTML=`<label>Checked By</label>
     <select id="checkedBy">
@@ -160,7 +132,6 @@ function showStep(){
       <option>Sunil K</option>
     </select>
     <div class="nav-btns"><button class="btn secondary" onclick="prevStep()">◀ Previous</button><button class="btn" onclick="nextStep()">Next ➜</button></div>`;
-    document.getElementById('checkedBy').focus();
   } else if(stepIndex>=6 && stepIndex<6+CHECKS.length){
     const idx=stepIndex-6; imagesCache[idx]=imagesCache[idx]||[];
     container.innerHTML=`
@@ -178,16 +149,13 @@ function showStep(){
       <input id="proof_${idx}" type="file" accept="image/*" capture="environment" multiple>
       <div class="thumbs" id="thumbs_${idx}"></div>
       <div class="nav-btns"><button class="btn secondary" onclick="prevStep()">◀ Previous</button><button class="btn" onclick="nextStep()">Next ➜</button></div>`;
-    document.getElementById(`status_${idx}`).focus();
     document.getElementById(`proof_${idx}`).addEventListener('change', e=>{
       [...e.target.files].forEach(f=>{
-        const r=new FileReader(); r.onload=ev=>{imagesCache[idx].push(ev.target.result); renderThumbs(idx);}
-        r.readAsDataURL(f);
+        const r=new FileReader(); r.onload=ev=>{imagesCache[idx].push(ev.target.result); renderThumbs(idx);}; r.readAsDataURL(f);
       });
     });
     renderThumbs(idx);
   } else {
-    // Final preview & actions
     const rpt=collectReport();
     let rows=rpt.checks.map(c=>{
       const imgs=(c.photos||[]).map(p=>`<img src="${p}">`).join('');
@@ -197,7 +165,7 @@ function showStep(){
       <div class="preview-card">
         <p><b>Truck:</b> ${rpt.meta.truckNo} | <b>Driver:</b> ${rpt.meta.driverName}</p>
         <p><b>ID:</b> ${rpt.meta.idNo} | <b>Date:</b> ${rpt.meta.checkDate} | <b>Checked By:</b> ${rpt.meta.checkedBy}</p>
-        <div><b>Driver Photo:</b><br><img src="${driverPhoto||''}" style="width:80px;height:100px;border:1px solid #ccc;border-radius:6px;"></div>
+        <div><b>Driver Photo:</b><br><img src="${driverPhoto||''}" style="width:50px;height:60px;border:1px solid #ccc;border-radius:6px;"></div>
         <table><tr><th>No</th><th>Check</th><th>Status</th><th>Remarks</th></tr>${rows}</table>
       </div>
       <div class="nav-btns">
@@ -212,16 +180,9 @@ function showStep(){
 
 function renderThumbs(idx){
   const c=document.getElementById(`thumbs_${idx}`);
-  if(!c) return;
+  if(!c)return;
   c.innerHTML='';
-  imagesCache[idx].forEach(d=>{
-    const div=document.createElement('div');
-    div.className='thumb';
-    const img=document.createElement('img');
-    img.src=d;
-    div.appendChild(img);
-    c.appendChild(div);
-  });
+  imagesCache[idx].forEach(d=>{c.innerHTML+=`<div class="thumb"><img src="${d}"></div>`});
 }
 
 function nextStep(){saveStepData(); stepIndex++; showStep();}
@@ -232,7 +193,7 @@ function saveStepData(){
   if(stepIndex===3) formData.idNo=document.getElementById('idNo').value;
   if(stepIndex===4) formData.checkDate=document.getElementById('checkDate').value;
   if(stepIndex===5) formData.checkedBy=document.getElementById('checkedBy').value;
-  if(stepIndex>=6 && stepIndex<6+CHECKS.length){
+  if(stepIndex>=6&&stepIndex<6+CHECKS.length){
     const i=stepIndex-6;
     formData[`status_${i}`]=document.getElementById(`status_${i}`).value;
     formData[`remarks_${i}`]=document.getElementById(`remarks_${i}`).value;
@@ -253,74 +214,81 @@ function collectReport(){
   return rpt;
 }
 
-// ----------------- PDF Generation -----------------
-async function generatePdfBlob(){
+async function generatePdf(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({unit:'mm', format:'a4'});
-  const rpt = collectReport();
+  const rpt=collectReport();
 
-  // Add Logo
-  const logoUrl='https://upload.wikimedia.org/wikipedia/en/5/5c/Indian_Oil_Corporation_Logo.png';
-  let logoImg=null;
-  const imgReq=new Promise(resolve=>{
-    const img=new Image();
-    img.crossOrigin='anonymous';
-    img.onload=()=>{logoImg=img; resolve();}
-    img.onerror=()=>resolve();
-    img.src=logoUrl;
-  });
-  await imgReq;
-  if(logoImg) doc.addImage(logoImg, 'PNG', 14, 10, 30, 15);
-
-  doc.setFontSize(16); doc.text('ROAD SAFETY FORTNIGHT CHECKLIST',105,20,null,null,'center');
-  doc.setFontSize(12);
-  doc.text(`Truck: ${rpt.meta.truckNo}`,14,32);
-  doc.text(`Driver: ${rpt.meta.driverName}`,110,32);
-  doc.text(`ID: ${rpt.meta.idNo}`,14,40);
-  doc.text(`Date: ${rpt.meta.checkDate}`,110,40);
-  doc.text(`Checked By: ${rpt.meta.checkedBy}`,14,48);
+  doc.setFontSize(14);
+  doc.text('Road Safety Fortnight Checklist',105,14,null,null,'center');
+  doc.setFontSize(10);
+  doc.text(`Truck: ${rpt.meta.truckNo}`,14,22);
+  doc.text(`Driver: ${rpt.meta.driverName}`,110,22);
+  doc.text(`ID: ${rpt.meta.idNo}`,14,28);
+  doc.text(`Date: ${rpt.meta.checkDate}`,110,28);
+  doc.text(`Checked By: ${rpt.meta.checkedBy}`,14,34);
 
   if(rpt.meta.driverPhoto){
-    doc.addImage(rpt.meta.driverPhoto,'JPEG',150,30,40,50);
+    doc.addImage(rpt.meta.driverPhoto,'JPEG',160,20,25,20);
   }
 
-  const body = rpt.checks.map(c=>[c.no,c.question,c.status||'-',c.remarks||'-']);
+  const body=rpt.checks.map(c=>[c.no,c.question,c.status||'-',c.remarks||'-']);
   doc.autoTable({
-    startY:85,
+    startY:42,
     head:[['No','Check','Status','Remarks']],
     body:body,
-    styles:{fontSize:10,overflow:'linebreak'},
+    styles:{fontSize:9,overflow:'linebreak'},
     headStyles:{fillColor:[47,107,227],textColor:255},
-    alternateRowStyles:{fillColor:[240,240,240]},
-    columnStyles:{0:{cellWidth:10},1:{cellWidth:100},2:{cellWidth:30},3:{cellWidth:60}},
+    columnStyles:{0:{cellWidth:10},1:{cellWidth:100},2:{cellWidth:30},3:{cellWidth:50}},
     margin:{left:14,right:14},
+  });
+
+  // All images at end
+  let y=doc.lastAutoTable.finalY+8;
+  doc.setFontSize(12); doc.text('Captured Images',14,y); y+=6;
+  const maxW=50,maxH=40,margin=14;
+  let x=margin; let imgNo=1;
+  rpt.checks.forEach(c=>{
+    (c.photos||[]).forEach(img=>{
+      if(x+maxW>210-margin){x=margin;y+=maxH+10;}
+      if(y+maxH>297-margin){doc.addPage();y=20;x=margin;}
+      doc.rect(x-0.5,y-0.5,maxW+1,maxH+1); // border
+      try{doc.addImage(img,'JPEG',x,y,maxW,maxH);}catch{doc.addImage(img,'PNG',x,y,maxW,maxH);}
+      doc.text(`${imgNo}`,x+2,y+maxH+4);
+      x+=maxW+6;
+      imgNo++;
+    });
   });
 
   return doc;
 }
 
 async function downloadPdf(){
-  const doc = await generatePdfBlob();
-  doc.save(`RoadSafetyChecklist_${new Date().toISOString().split('T')[0]}.pdf`);
+  const doc = await generatePdf();
+  doc.save(`Road_Safety_Checklist_${formData.truckNo||'Truck'}.pdf`);
 }
 
 async function sharePdf(){
-  const doc = await generatePdfBlob();
+  const doc = await generatePdf();
   const blob = doc.output('blob');
-  const file = new File([blob], `RoadSafetyChecklist_${new Date().toISOString().split('T')[0]}.pdf`, {type:'application/pdf'});
-
+  const file = new File([blob], `Road_Safety_Checklist_${formData.truckNo||'Truck'}.pdf`, {type:'application/pdf'});
   if(navigator.canShare && navigator.canShare({files:[file]})){
-    navigator.share({files:[file], title:'Road Safety Checklist', text:'Checklist PDF'}).catch(console.error);
-  } else {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href=url; a.download=file.name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try{await navigator.share({files:[file], title:'Road Safety Checklist', text:'Please find attached.'});}catch(e){alert('Share failed');}
+  }else{
+    downloadPdf();
+    alert('Sharing not supported. PDF downloaded instead.');
   }
 }
 
-function clearData(){if(confirm("Clear all data?")){stepIndex=0;formData={};imagesCache={};driverPhoto=null;showStep();}}
+function clearData(){
+  if(confirm('Clear all data and restart?')){
+    stepIndex=0; formData={}; imagesCache={}; driverPhoto
+    = null;
+    showStep();
+  }
+}
 
+// Initialize first step
 showStep();
 </script>
 </body>
